@@ -2,7 +2,40 @@
   "name": "notifications-api",
   "version": "0.0.1",
   "description": "A simple api to allow you generating notifications as images. You can use it in readme file for example",
-  "keywords": ["notification","api","image"],
+  "scripts": {
+    "start:dev": "nodemon",
+    "start": "npm run build && node dist/main.js",
+    "build": "rimraf ./dist && tsup src/main.ts --format cjs --clean"
+  },
+  "keywords": [
+    "notification",
+    "badge",
+    "api",
+    "rest",
+    "image"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notifications-tk/api.git"
+  },
   "author": "Stévan Corre <me@stevancorre.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notifications-tk/api/issues"
+  },
+  "homepage": "https://github.com/notifications-tk/api#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.31",
+    "nodemon": "^2.0.15",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "tsup": "^5.12.6",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1"
+  }
 }
