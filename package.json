@@ -1,0 +1,8 @@
+{
+  "name": "notifications-api",
+  "version": "0.0.1",
+  "description": "A simple api to allow you generating notifications as images. You can use it in readme file for example",
+  "keywords": ["notification","api","image"],
+  "author": "Stévan Corre <me@stevancorre.com>",
+  "license": "MIT"
+}
