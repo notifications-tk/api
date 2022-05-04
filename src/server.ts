@@ -1,18 +1,14 @@
 import express from "express"
 import http from "http";
-import { getLogger, Logger } from "log4js";
+import { Logger } from "log4js";
 
 import routes from "./routes";
 
 export class Server {
     private readonly app: express.Application;
     private readonly server: http.Server;
-    private readonly logger: Logger;
 
-    public constructor(private port?: string) {
-        this.logger = getLogger();
-        this.logger.level = "debug";
-
+    public constructor(private readonly logger: Logger, private readonly port?: string) {
         // initialize express app
         this.app = express();
         this.initApp();

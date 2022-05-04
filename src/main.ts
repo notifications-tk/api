@@ -1,11 +1,18 @@
 import dotenv from "dotenv";
-import { Generator } from "./generator";
+import { getLogger, Logger } from "log4js";
 
+import { Generator } from "./generator";
 import { Server } from "./server";
 
 dotenv.config();
 
-Generator.init();
+Generator.init()
+    .then(() => {
+        const logger: Logger = getLogger();
+        logger.level = "debug";
 
-const server: Server = new Server(process.env.PORT);
-server.start();
+        logger.info("Generator initialized");
+
+        const server: Server = new Server(logger, process.env.PORT);
+        server.start();
+    });
