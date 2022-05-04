@@ -6,7 +6,7 @@ export const renderTemplate = (params: ImageGeneratorParams): string =>
         .notification {
             font-family: "Roboto";
             
-            margin: 10px 0px;
+            margin: 10px 0;
             padding: 15px;
             width: ${params.width == "fit-content" ? "fit-content" : params.width + "px"};
 
@@ -17,7 +17,7 @@ export const renderTemplate = (params: ImageGeneratorParams): string =>
         }
 
         .notification i {
-            margin: 0 10px;
+            margin-right: 10px;
             font-size: 1.3em;
             vertical-align: middle;
         }
