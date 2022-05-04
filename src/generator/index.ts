@@ -19,10 +19,6 @@ export class Generator {
         const html: string = readFileSync(path.join(__dirname, "static/index.html"), 'utf8');
         await this.page.goto("data:text/html," + html, { waitUntil: "networkidle0" });
 
-        if (!existsSync("cache")) {
-            await fsPromises.mkdir("cache");
-        }
-
         // for some reason i need to generate a first time otherwhise links doesn't work
         await this.generate({ ...DEFAULT_PARAMS["*"], text: "init" });
     }
@@ -44,6 +40,10 @@ export class Generator {
 
         const content: ElementHandle<Element> = await this.page.$("div") as ElementHandle<Element>;
         const image = await content.screenshot({ omitBackground: true });
+
+        if (!existsSync("cache")) {
+            await fsPromises.mkdir("cache");
+        }
 
         await fsPromises.writeFile(imagePath, image);
         return image;
