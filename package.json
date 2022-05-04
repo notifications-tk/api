@@ -5,7 +5,7 @@
   "scripts": {
     "start:dev": "nodemon",
     "start": "npm run build && node dist/main.js",
-    "build": "rimraf ./dist && tsup src/main.ts --format cjs --clean",
+    "build": "rimraf dist && cp -r src/generator/static dist && tsup src/main.ts --format cjs --clean",
     "clear-cache": "rimraf ./cache"
   },
   "keywords": [
