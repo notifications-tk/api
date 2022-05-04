@@ -11,7 +11,7 @@ export type ImageGeneratorParams = {
     type?: string;
 }
 
-const DEFAULT_PARAMS: { [key: string]: ImageGeneratorParams } = {
+export const DEFAULT_PARAMS: { [key: string]: ImageGeneratorParams } = {
     ["info"]: {
         icon: "info-circle",
         backgroundColor: "BDE5F8",

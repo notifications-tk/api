@@ -1,17 +1,13 @@
 import { ImageGeneratorParams } from "./parameters";
 
 export const renderTemplate = (params: ImageGeneratorParams): string =>
-    `<div class="notification">
-        <i class="fa fa-${params.icon}"></i>
-        ${params.text}
-    </div>
-
+    `
     <style>
-        @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
-
         .notification {
+            font-family: "Roboto";
+            
             margin: 10px 0px;
-            padding: 12px;
+            padding: 15px;
             width: ${params.width == "fit-content" ? "fit-content" : params.width + "px"};
 
             color: #${params.foregroundColor};
@@ -21,8 +17,13 @@ export const renderTemplate = (params: ImageGeneratorParams): string =>
         }
 
         .notification i {
-            margin: 10px 22px;
-            font-size: 2em;
+            margin: 0 10px;
+            font-size: 1.3em;
             vertical-align: middle;
         }
-    </style>`;
+    </style>
+
+    <div class="notification">
+        <i class="fa fa-${params.icon}"></i>
+        ${params.text}<br>
+    </div>`;

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 
-import { applyDefaults, ImageGeneratorParams, paramsHasErrors } from "./generator";
+import { Generator, applyDefaults, ImageGeneratorParams, paramsHasErrors } from "./generator";
 
-export const getImage = (req: Request, res: Response) => {
+export const getImage = async (req: Request, res: Response) => {
     let params: ImageGeneratorParams = req.query as unknown as ImageGeneratorParams;
     params = applyDefaults(params);
 
@@ -12,5 +12,8 @@ export const getImage = (req: Request, res: Response) => {
             errors: errors
         });;
 
-    res.status(200);
+    const data = await Generator.generate(params);
+    
+    res.set("Content-Type", "image/png");
+    res.send(data);
 }
