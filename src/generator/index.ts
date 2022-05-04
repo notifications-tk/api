@@ -1,11 +1,11 @@
 import path from "path";
 import { existsSync, readFileSync } from "fs";
+import { promises as fsPromises } from "fs";
 import puppeteer, { Browser, ElementHandle, Page } from "puppeteer";
+import objectHash from "object-hash";
 
 import { ImageGeneratorParams, applyDefaults, paramsHasErrors, DEFAULT_PARAMS } from "./parameters";
 import { renderTemplate } from "./template";
-import objectHash from "object-hash";
-import { mkdir, readFile, writeFile } from "fs/promises";
 
 export { ImageGeneratorParams, applyDefaults, paramsHasErrors, renderTemplate };
 
@@ -20,7 +20,7 @@ export class Generator {
         await this.page.goto("data:text/html," + html, { waitUntil: "networkidle0" });
 
         if (!existsSync("cache")) {
-            await mkdir("cache");
+            await fsPromises.mkdir("cache");
         }
 
         // for some reason i need to generate a first time otherwhise links doesn't work
@@ -34,7 +34,7 @@ export class Generator {
         const imagePath: string = path.join("cache", hash);
 
         if (existsSync(imagePath)) {
-            return await readFile(imagePath);
+            return await fsPromises.readFile(imagePath);
         }
 
         await this.page.evaluate((html: string) => {
@@ -45,7 +45,7 @@ export class Generator {
         const content: ElementHandle<Element> = await this.page.$("div") as ElementHandle<Element>;
         const image = await content.screenshot({ omitBackground: true });
 
-        await writeFile(imagePath, image);
+        await fsPromises.writeFile(imagePath, image);
         return image;
     }
 }
