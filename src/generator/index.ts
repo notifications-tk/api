@@ -20,7 +20,7 @@ export class Generator {
         await this.page.goto("data:text/html," + html, { waitUntil: "networkidle0" });
 
         // for some reason i need to generate a first time otherwhise links doesn't work
-        await this.generate({ ...DEFAULT_PARAMS["*"], text: "init" });
+        await this.generate({ ...DEFAULT_PARAMS["*"], force: true, text: "init" });
     }
 
     public static async generate(params: ImageGeneratorParams): Promise<string | Buffer> {
@@ -28,8 +28,8 @@ export class Generator {
 
         const hash: string = objectHash(params);
         const imagePath: string = path.join("cache", hash);
-
-        if (existsSync(imagePath)) {
+        
+        if (params.force === undefined && existsSync(imagePath)) {           
             return await fsPromises.readFile(imagePath);
         }
 

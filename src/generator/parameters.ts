@@ -1,6 +1,7 @@
 import { isValidWidth, isValidColor, isValidInteger, isValidString } from "./validators";
 
 export type ImageGeneratorParams = {
+    force?: boolean;
     icon?: string;
     text?: string;
     width?: number | "fit-content";
@@ -47,12 +48,12 @@ export const DEFAULT_PARAMS: { [key: string]: ImageGeneratorParams } = {
 };
 
 export const applyDefaults = (params: ImageGeneratorParams): ImageGeneratorParams => {
-    params = { ...DEFAULT_PARAMS["*"], ...params };
-
     if (params.type && DEFAULT_PARAMS[params.type]) {
-        params = { ...params, ...DEFAULT_PARAMS[params.type] }
+        params = { ...DEFAULT_PARAMS[params.type], ...params }
     }
-
+    
+    params = { ...DEFAULT_PARAMS["*"], ...params };
+    
     return params;
 };
 

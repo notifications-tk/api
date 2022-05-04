@@ -7,7 +7,7 @@ export const renderTemplate = (params: ImageGeneratorParams): string =>
             font-family: "Roboto";
             
             margin: 10px 0;
-            padding: 15px;
+            padding: 10px;
             width: ${params.width == "fit-content" ? "fit-content" : params.width + "px"};
 
             color: #${params.foregroundColor};
