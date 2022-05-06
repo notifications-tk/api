@@ -4,8 +4,8 @@
   "description": "A simple api to allow you generating notifications as images. You can use it in readme file for example",
   "scripts": {
     "start:dev": "nodemon",
-    "start": "npm run build && node dist/main.js",
-    "build": "rimraf dist && tsup src/main.ts --format cjs --clean && cp -r src/generator/static dist",
+    "start": "npm run build && cd dist && node main.js",
+    "build": "rimraf dist && tsup src/main.ts --format cjs --clean && cp -r src/static dist",
     "clear-cache": "rimraf ./cache"
   },
   "keywords": [
@@ -38,6 +38,7 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
+    "express-validator": "^6.14.0",
     "log4js": "^6.4.6",
     "object-hash": "^3.0.0"
   }
