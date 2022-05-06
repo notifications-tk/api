@@ -6,13 +6,8 @@ import { Server } from "./server";
 
 dotenv.config();
 
-Generator.init()
-    .then(() => {
-        const logger: Logger = getLogger();
-        logger.level = "debug";
+const logger: Logger = getLogger();
+logger.level = "debug";
 
-        logger.info("Generator initialized");
-
-        const server: Server = new Server(logger, process.env.PORT);
-        server.start();
-    });
+const server: Server = new Server(logger, process.env.PORT);
+server.start();

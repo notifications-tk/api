@@ -14,35 +14,35 @@ export type ImageGeneratorParams = {
 
 export const DEFAULT_PARAMS: { [key: string]: ImageGeneratorParams } = {
     ["info"]: {
-        icon: "info-circle",
+        icon: "solid-circle-info",
         backgroundColor: "BDE5F8",
         foregroundColor: "00529B",
         borderColor: "BDE5F8"
     },
     ["success"]: {
-        icon: "check",
+        icon: "solid-circle-check",
         backgroundColor: "4F8A10",
         foregroundColor: "DFF2BF",
         borderColor: "4F8A10"
     },
     ["warning"]: {
-        icon: "warning",
+        icon: "solid-triangle-exclamation",
         backgroundColor: "FEEFB3",
         foregroundColor: "9F6000",
         borderColor: "FEEFB3"
     },
     ["error"]: {
-        icon: "times-circle",
+        icon: "solid-circle-xmark",
         backgroundColor: "D8000C",
         foregroundColor: "FFD2D2",
         borderColor: "D8000C"
     },
     ["*"]: {
-        icon: "info-circle",
+        icon: "solid-circle-info",
         backgroundColor: "BDE5F8",
         foregroundColor: "00529B",
         borderColor: "BDE5F8",
-        width: "fit-content",
+        width: 300,
         borderRadius: 5
     }
 };

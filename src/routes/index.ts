@@ -1,10 +1,12 @@
 import express from "express";
 
-import { getImage } from "./controller";
+import { getSvg, getPng } from "../controller";
 
 const router = express.Router();
 
-router.get("/", getImage);
+router.get("/svg", getSvg);
+router.get("/png", getPng);
+router.get("/*", getSvg);
 
 router.options("/*", (res: express.Response) => {
     res.header("Access-Control-Allow-Origin", "*");

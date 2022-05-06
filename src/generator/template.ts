@@ -1,29 +1,40 @@
 import { ImageGeneratorParams } from "./parameters";
+import { promises as fsPromises } from "fs";
+
+// TODO: handle border color #${params.borderColor}
 
 export const renderTemplate = (params: ImageGeneratorParams): string =>
-    `
-    <style>
-        .notification {
-            font-family: "Roboto";
-            
-            margin: 10px 0;
-            padding: 10px;
-            width: ${params.width == "fit-content" ? "fit-content" : params.width + "px"};
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${params.width}" height="40">
+        <rect x="0" y="0" width="100%" height="100%" rx="${params.borderRadius}" ry="${params.borderRadius}" fill="#${params.backgroundColor}" />
 
-            color: #${params.foregroundColor};
-            background-color: #${params.backgroundColor};
-            border: 1px solid #${params.borderColor};
-            border-radius: ${params.borderRadius}px;
-        }
+        {{ ${params.icon} }}
 
-        .notification i {
-            margin-right: 10px;
-            font-size: 1.3em;
-            vertical-align: middle;
-        }
-    </style>
+        <text x="50" y="50%" width="100%" fill="#${params.foregroundColor}" font-family="Roboto" alignment-baseline="middle">
+            ${params.text}
+        </text>
 
-    <div class="notification">
-        <i class="fa fa-${params.icon}"></i>
-        ${params.text}<br>
-    </div>`;
+        <defs>
+            <style type="text/css">
+                @import url("https://fonts.googleapis.com/css?family=Roboto:400");
+            </style>
+        </defs>
+    </svg>`;
+
+export const postProcessTemplate = async (params: ImageGeneratorParams, template: string): Promise<string> => {
+    // process icon
+    const iconParts: RegExpMatchArray = template.match(/{{ ([^-]*)-(.*) }}/)!;
+    let iconSource: string = await fsPromises.readFile(`./dist/static/icons/${iconParts[1]}/${iconParts[2]}.svg`, "utf-8");
+    iconSource = iconSource.replace("path", `path fill="#${params.foregroundColor}"`);
+    
+    template = template.replace(/{{ ([^-]*)-(.*) }}/, iconSource);
+
+    // process text (align with icon)
+    const iconViewBox: RegExpMatchArray = iconSource.match(/viewBox="([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)"/)!;
+    const originalHeight: number = Number.parseInt(iconViewBox[3]);
+    const originalWidth: number = Number.parseInt(iconViewBox[4]);
+    const finalWidth: number = (originalWidth * 24) / originalHeight;
+
+    template = template.replace(/<text(.*)x=\"([^\"]*)\"/, `<text$1x="${30 + finalWidth}"`);
+
+    return template;
+}
