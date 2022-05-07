@@ -3,13 +3,8 @@ import { Request, Response } from "express";
 import { Generator } from "../generator";
 import { Content } from "../generator/content";
 
-export const getPng = async (req: Request, res: Response) => {
-    // TODO: implement
-}
-
-export const getSvg = async (req: Request, res: Response) => {
-    await generate(req, res,  "generateSvg");
-}
+export const getPng = async (req: Request, res: Response) => await generate(req, res,  "generatePng");
+export const getSvg = async (req: Request, res: Response) => await generate(req, res,  "generateSvg");
 
 async function generate(req: Request, res: Response, generatorFunc: keyof Generator): Promise<void> {
     const generator: Generator = new Generator(req.query);

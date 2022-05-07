@@ -1,7 +1,7 @@
 import path from "path";
-import { existsSync, readFileSync } from "fs";
-import { promises as fsPromises } from "fs";
+import { promises as fsPromises, existsSync } from "fs";
 import objectHash from "object-hash";
+import sharp from "sharp";
 
 import { ImageGeneratorParams, applyDefaults, paramsHasErrors } from "./parameters";
 import { postProcessTemplate, renderTemplate } from "./template";
@@ -22,11 +22,11 @@ export class Generator {
     }
 
     public async generateSvg(): Promise<Content> {
-        const hash: string = objectHash(this.params);
+        const hash: string = objectHash(this.params) + ".svg";
         const imagePath: string = path.join("cache", hash);
 
         if (this.params.force === undefined) {
-            const cachedImage: string | null = await this.readCache(imagePath);
+            const cachedImage: Buffer | null = await this.readCache(imagePath);
             if (cachedImage != null) return {
                 type: "image/svg",
                 value: cachedImage
@@ -43,15 +43,39 @@ export class Generator {
         };
     }
 
-    private async readCache(path: string): Promise<string | null> {
+    public async generatePng(): Promise<Content> {
+        const hash: string = objectHash(this.params) + ".png";
+        const imagePath: string = path.join("cache", hash);
+
+        if (this.params.force === undefined) {
+            const cachedImage: Buffer | null = await this.readCache(imagePath);
+            if (cachedImage != null) return {
+                type: "image/png",
+                value: cachedImage
+            };
+        }
+
+        let result: string = renderTemplate(this.params);
+        result = await postProcessTemplate(this.params, result);  
+
+        const pngBuffer: Buffer = await sharp(Buffer.from(result)).png().toBuffer();
+
+        await this.writeCache(imagePath, pngBuffer);
+        return {
+            type: "image/png",
+            value: pngBuffer
+        };
+    }
+
+    private async readCache(path: string): Promise<Buffer | null> {
         if (existsSync(path)) {
-            return await fsPromises.readFile(path, "utf-8");
+            return await fsPromises.readFile(path);
         }
 
         return null;
     }
 
-    private async writeCache(path: string, content: string): Promise<void> {
+    private async writeCache(path: string, content: Buffer | string): Promise<void> {
         if (!existsSync("cache")) {
             await fsPromises.mkdir("cache");
         }
