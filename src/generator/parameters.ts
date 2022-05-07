@@ -1,10 +1,10 @@
-import { isValidWidth, isValidColor, isValidInteger, isValidString } from "./validators";
+import { isValidWidth, isValidColor, isValidInteger, isValidString, isValidIcon } from "./validators";
 
 export type ImageGeneratorParams = {
     force?: boolean;
     icon?: string;
     text?: string;
-    width?: number | "fit-content";
+    width?: number;
     foregroundColor?: string;
     backgroundColor?: string;
     borderColor?: string;
@@ -51,16 +51,16 @@ export const applyDefaults = (params: ImageGeneratorParams): ImageGeneratorParam
     if (params.type && DEFAULT_PARAMS[params.type]) {
         params = { ...DEFAULT_PARAMS[params.type], ...params }
     }
-    
+
     params = { ...DEFAULT_PARAMS["*"], ...params };
-    
+
     return params;
 };
 
-// todo: generate error string
 export const paramsHasErrors = (params: ImageGeneratorParams): string[] => {
     const errors: string[] = [];
 
+    if (!isValidIcon(params.icon)) errors.push("Invalid parameter `icon`: Resource not found");
     if (!isValidWidth(params.width)) errors.push("Invalid parameter `width`: Expected integer of `fit-content`");
     if (!isValidColor(params.backgroundColor)) errors.push("Invalid parameter `backgroundColor`: Invalid hex value");
     if (!isValidColor(params.foregroundColor)) errors.push("Invalid parameter `foregroundColor`: Invalid hex value");
@@ -70,5 +70,3 @@ export const paramsHasErrors = (params: ImageGeneratorParams): string[] => {
 
     return errors;
 };
-
-const htmlToPng = () => { };

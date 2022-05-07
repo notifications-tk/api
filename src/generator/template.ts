@@ -23,7 +23,7 @@ export const renderTemplate = (params: ImageGeneratorParams): string =>
 export const postProcessTemplate = async (params: ImageGeneratorParams, template: string): Promise<string> => {
     // process icon
     const iconParts: RegExpMatchArray = template.match(/{{ ([^-]*)-(.*) }}/)!;
-    let iconSource: string = await fsPromises.readFile(`./dist/static/icons/${iconParts[1]}/${iconParts[2]}.svg`, "utf-8");
+    let iconSource: string = await fsPromises.readFile(`static/icons/${iconParts[1]}/${iconParts[2]}.svg`, "utf-8");
     iconSource = iconSource.replace("path", `path fill="#${params.foregroundColor}"`);
     
     template = template.replace(/{{ ([^-]*)-(.*) }}/, iconSource);

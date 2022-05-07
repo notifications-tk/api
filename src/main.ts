@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import { getLogger, Logger } from "log4js";
 
-import { Generator } from "./generator";
 import { Server } from "./server";
 
 dotenv.config();
