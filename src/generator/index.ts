@@ -5,6 +5,7 @@ import objectHash from "object-hash";
 
 import { ImageGeneratorParams, applyDefaults, paramsHasErrors } from "./parameters";
 import { postProcessTemplate, renderTemplate } from "./template";
+import { Content } from "./content";
 
 export class Generator {
     private params: ImageGeneratorParams;
@@ -20,20 +21,26 @@ export class Generator {
         return errors;
     }
 
-    public async generateSvg(): Promise<string> {
+    public async generateSvg(): Promise<Content> {
         const hash: string = objectHash(this.params);
         const imagePath: string = path.join("cache", hash);
 
         if (this.params.force === undefined) {
             const cachedImage: string | null = await this.readCache(imagePath);
-            if (cachedImage != null) return cachedImage;
+            if (cachedImage != null) return {
+                type: "image/svg",
+                value: cachedImage
+            };
         }
 
         let result: string = renderTemplate(this.params);
         result = await postProcessTemplate(this.params, result);
 
         await this.writeCache(imagePath, result);
-        return result;
+        return {
+            type: "image/svg",
+            value: result
+        };
     }
 
     private async readCache(path: string): Promise<string | null> {
