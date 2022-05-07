@@ -22,16 +22,9 @@ export class Generator {
     }
 
     public async generateSvg(): Promise<Content> {
-        const hash: string = objectHash(this.params) + ".svg";
-        const imagePath: string = path.join("cache", hash);
-
-        if (this.params.force === undefined) {
-            const cachedImage: Buffer | null = await this.readCache(imagePath);
-            if (cachedImage != null) return {
-                type: "image/svg",
-                value: cachedImage
-            };
-        }
+        const imagePath: string = this.getCachePath("svg");
+        const cachedContent: Content | null = await this.checkCache(imagePath);
+        if(cachedContent != null) return cachedContent;
 
         let result: string = renderTemplate(this.params);
         result = await postProcessTemplate(this.params, result);
@@ -44,27 +37,35 @@ export class Generator {
     }
 
     public async generatePng(): Promise<Content> {
-        const hash: string = objectHash(this.params) + ".png";
-        const imagePath: string = path.join("cache", hash);
+        const imagePath: string = this.getCachePath("png");
+        const cachedContent: Content | null = await this.checkCache(imagePath);
+        if(cachedContent != null) return cachedContent;
 
-        if (this.params.force === undefined) {
-            const cachedImage: Buffer | null = await this.readCache(imagePath);
-            if (cachedImage != null) return {
-                type: "image/png",
-                value: cachedImage
-            };
-        }
-
-        let result: string = renderTemplate(this.params);
-        result = await postProcessTemplate(this.params, result);  
-
-        const pngBuffer: Buffer = await sharp(Buffer.from(result)).png().toBuffer();
+        const svg: Content = await this.generateSvg();
+        const pngBuffer: Buffer = await sharp(Buffer.from(svg.value)).png().toBuffer();
 
         await this.writeCache(imagePath, pngBuffer);
         return {
             type: "image/png",
             value: pngBuffer
         };
+    }
+
+    private getCachePath(extension: string): string {
+        const hash: string = `${objectHash(this.params)}.${extension}`;
+        return path.join("cache", hash);
+    }
+
+    private async checkCache(path: string): Promise<Content | null> {
+        if (this.params.force === undefined) {
+            const cachedImage: Buffer | null = await this.readCache(path);
+            if (cachedImage != null) return {
+                type: `image/${path.split(".").pop()}`,
+                value: cachedImage
+            };
+        }
+
+        return null;
     }
 
     private async readCache(path: string): Promise<Buffer | null> {
